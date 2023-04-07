@@ -11,7 +11,8 @@ import { Input } from "component/input";
 import { IconEyeClose, IconEyeOpen, IconUser } from "component/icon";
 import { Button } from "component/button";
 import AuthResourceAPI from "api/authResource/AuthResourceAPI";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { signInRD } from "redux/User";
 
 const schema = yup.object({
   username: yup.string().required("Please enter your username"),
@@ -31,33 +32,30 @@ const SignInPage = () => {
     resolver: yupResolver(schema),
   });
   const [togglePassword, setTogglePassword] = useState(false);
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+
   const navigate = useNavigate();
   useEffect(() => {
     document.title = "Login Page";
-    // if (userInfo?.email) {
-    //   return navigate("/");
-    // }
+    if (localStorage.getItem("accessToken")) {
+      return navigate("/dashboard");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleSignIn = async (values) => {
     if (!isValid) return;
     // await signInWithEmailAndPassword(auth, values.email, values.password);
     const result = await AuthResourceAPI.postSignIn(values);
-    console.log(
-      "🚀 ~ file: SignInPage.jsx:48 ~ handleSignIn ~ result:",
-      result
-    );
 
     if (result?.status === 200) {
-      // localStorage.setItem("accessToken", accessToken);
-      // localStorage.setItem("refreshToken", refreshToken);
-      // localStorage.setItem("id", id);
-      // localStorage.setItem("username", username);
-      // localStorage.setItem("email", email);
-      // localStorage.setItem("avatar", avatar);
-
-      navigate("/dashboard");
+      localStorage.setItem("accessToken", result.data.accessToken);
+      localStorage.setItem("refreshToken", result.data.refreshToken);
+      localStorage.setItem("username", result.data.username);
+      localStorage.setItem("email", result.data.email);
+      localStorage.setItem("avatar", result.data.avatar);
+      dispatch(signInRD(result.data));
+      if (localStorage.getItem("accessToken")) navigate("/dashboard");
     } else if (result?.status >= 400 || result?.status < 500) {
       toast.error(result?.data.message, {
         delay: 100,

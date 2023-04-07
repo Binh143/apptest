@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+const SIGNIN = "signIn";
 const initialState = {
   accessToken: "",
   refreshToken: "",
@@ -9,19 +10,27 @@ const initialState = {
   avatar: "",
 };
 
-export const user = () => ({
-  type: "signIn",
+export const signInRD = (obj) => ({
+  type: "SIGNIN",
+  data: obj,
 });
 
 function userReducer(state = initialState, action) {
   switch (action.type) {
-    case signIn:
+    case SIGNIN:
       return {
         ...state,
+        accessToken: action.data.accessToken,
+        refreshToken: action.data.refreshToken,
+        id: action.data.id,
+        username: action.data.username,
+        email: action.data.email,
+        name: action.data.name,
+        avatar: action.data.avatar,
       };
 
     default:
-      break;
+      return state;
   }
 }
 export default userReducer;
