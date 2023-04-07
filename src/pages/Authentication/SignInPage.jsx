@@ -8,19 +8,19 @@ import { toast } from "react-toastify";
 import { Field } from "component/field";
 import { Label } from "component/label";
 import { Input } from "component/input";
-import { IconEmail, IconEyeClose, IconEyeOpen } from "component/icon";
+import { IconEyeClose, IconEyeOpen, IconUser } from "component/icon";
 import { Button } from "component/button";
+import AuthResourceAPI from "api/authResource/AuthResourceAPI";
+import { useDispatch } from "react-redux";
 
 const schema = yup.object({
-  email: yup
-    .string()
-    .email("Please enter valid your email address")
-    .required("Please enter your email address"),
+  username: yup.string().required("Please enter your username"),
   password: yup
     .string()
     .min(6, "Your password must be at least 8 characters or greater")
     .required("Please enter your password"),
 });
+
 const SignInPage = () => {
   const {
     handleSubmit,
@@ -31,7 +31,7 @@ const SignInPage = () => {
     resolver: yupResolver(schema),
   });
   const [togglePassword, setTogglePassword] = useState(false);
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
     document.title = "Login Page";
@@ -43,7 +43,26 @@ const SignInPage = () => {
   const handleSignIn = async (values) => {
     if (!isValid) return;
     // await signInWithEmailAndPassword(auth, values.email, values.password);
-    navigate("/");
+    const result = await AuthResourceAPI.postSignIn(values);
+    console.log(
+      "🚀 ~ file: SignInPage.jsx:48 ~ handleSignIn ~ result:",
+      result
+    );
+
+    if (result?.status === 200) {
+      // localStorage.setItem("accessToken", accessToken);
+      // localStorage.setItem("refreshToken", refreshToken);
+      // localStorage.setItem("id", id);
+      // localStorage.setItem("username", username);
+      // localStorage.setItem("email", email);
+      // localStorage.setItem("avatar", avatar);
+
+      navigate("/dashboard");
+    } else if (result?.status >= 400 || result?.status < 500) {
+      toast.error(result?.data.message, {
+        delay: 100,
+      });
+    }
   };
   useEffect(() => {
     const arrError = Object.values(errors);
@@ -58,14 +77,14 @@ const SignInPage = () => {
     <AuthenticationPage>
       <form className="form" onSubmit={handleSubmit(handleSignIn)}>
         <Field>
-          <Label htmlFor="email">Email address</Label>
+          <Label htmlFor="username">Username</Label>
           <Input
-            type="email"
-            name="email"
-            placeholder="Enter your Email"
+            type="text"
+            name="username"
+            placeholder="Enter your username"
             control={control}
           >
-            <IconEmail className="input-icon"></IconEmail>
+            <IconUser className="input-icon"></IconUser>
           </Input>
         </Field>
         <Field>
