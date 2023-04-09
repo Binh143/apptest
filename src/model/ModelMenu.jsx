@@ -276,7 +276,9 @@ const ModelMenu = ({
             </div>
           </li>
           {data.length > 0 &&
-            data.map((item, index) => <CollapseItem data={item} />)}
+            data.map((item, index) => (
+              <CollapseItem data={item} key={item.id} />
+            ))}
           <li>
             <div className="profile-details">
               <div className="profile-content">
