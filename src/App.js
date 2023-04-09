@@ -19,6 +19,10 @@ function App() {
             path="teacher"
             element={<DashboardTeacherFE></DashboardTeacherFE>}
           ></Route>
+          <Route
+            path="teacher"
+            element={<DashboardTeacherFE></DashboardTeacherFE>}
+          ></Route>
         </Route>
         <Route path="/admin" element={<MainBE></MainBE>}>
           <Route index element={<HomeBE></HomeBE>}></Route>

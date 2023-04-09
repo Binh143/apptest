@@ -24,8 +24,8 @@ const CollapseItem = ({ data }) => {
           </Link>
         </li>
         {data.subMenu.length > 0 &&
-          data.subMenu.map((itemSub) => (
-            <li>
+          data.subMenu.map((itemSub, index) => (
+            <li key={index}>
               <Link to={itemSub.url}>{itemSub.title}</Link>
             </li>
           ))}

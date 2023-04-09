@@ -126,7 +126,7 @@ const Main = () => {
         <div className="menu-content ">
           <div>
             <i
-              class="bx bx-menu menu-content-icon"
+              className="bx bx-menu menu-content-icon"
               onClick={() => setToggleMenu(!toggleMenu)}
             ></i>
             <span> </span>
