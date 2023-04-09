@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import AuthenticationPage from "./AuthenticationPage";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -31,11 +31,13 @@ const SignInPage = () => {
     mode: "onChange",
     resolver: yupResolver(schema),
   });
+  const param = useParams(-1);
   const [togglePassword, setTogglePassword] = useState(false);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+
   useEffect(() => {
     document.title = "Login Page";
     if (localStorage.getItem("accessToken")) {
@@ -43,6 +45,7 @@ const SignInPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   const handleSignIn = async (values) => {
     if (!isValid) return;
     // await signInWithEmailAndPassword(auth, values.email, values.password);
@@ -54,6 +57,7 @@ const SignInPage = () => {
       localStorage.setItem("username", result.data.username);
       localStorage.setItem("email", result.data.email);
       localStorage.setItem("avatar", result.data.avatar);
+      localStorage.setItem("name", result.data.name);
       dispatch(signInRD(result.data));
       if (localStorage.getItem("accessToken")) navigate("/dashboard");
     } else if (result?.status >= 400 || result?.status < 500) {

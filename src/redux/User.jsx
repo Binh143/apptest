@@ -29,8 +29,20 @@ function userReducer(state = initialState, action) {
         avatar: action.data.avatar,
       };
 
-    default:
+    default: {
+      if (localStorage.getItem("accessToken")) {
+        return {
+          ...state,
+          accessToken: localStorage.getItem("accessToken"),
+          refreshToken: localStorage.getItem("refreshToken"),
+          username: localStorage.getItem("username"),
+          email: localStorage.getItem("email"),
+          name: localStorage.getItem("name"),
+          avatar: localStorage.getItem("avatar"),
+        };
+      }
       return state;
+    }
   }
 }
 export default userReducer;
