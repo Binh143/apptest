@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const AuthenticationPageStyle = styled.div`
-  min-height: 100vh;
+  max-height: 100vh;
   padding: 20px;
+  overflow-y: scroll;
   .logo {
     margin: 0 auto 20px;
   }

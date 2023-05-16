@@ -6,7 +6,6 @@ const AuthResourceAPI = {
     return axiosClient
       .post(url, JSON.stringify(obj))
       .then(function (responses) {
-        console.log(responses);
         return responses;
       })
       .catch(function (error) {

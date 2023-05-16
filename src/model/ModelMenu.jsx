@@ -1,8 +1,12 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { startTransition, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { MenuData } from "./MenuData";
 import { CollapseItem } from "component/collapseItem";
+import { Button } from "component/button";
+import userReducer, { signOutRD } from "redux/User";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const ModelMenuStyle = styled.div`
   width: 100%;
@@ -165,7 +169,7 @@ const ModelMenuStyle = styled.div`
     width: 300px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: ${(props) => (props.token ? "space-between" : "center")};
     background: #1d1b31;
     padding: 12px 0;
     transition: all 0.5s ease;
@@ -190,8 +194,13 @@ const ModelMenuStyle = styled.div`
     background: #1d1b31;
     transition: all 0.5s ease;
   }
-  .sidebar.close .profile-details img {
+  .sidebar.close .profile-details img,
+  .sidebar.close .profile-details button {
     padding: 10px;
+  }
+  .sidebar.close .profile-details button {
+    font-size: 1rem;
+    width: 100%;
   }
   .sidebar .profile-details .profile_name,
   .sidebar .profile-details .job {
@@ -252,8 +261,24 @@ const ModelMenu = ({
 }) => {
   const { name, email, avatar } = useSelector((state) => state.user);
   const data = MenuData;
+  let token = localStorage.getItem("accessToken");
+  const dispatch = useDispatch();
+  const { accessToken } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+      toast.success("Đăng xuất thành công", {
+        delay: 1000,
+      });
+    }
+  }, [token]);
+  function handleSignOut() {
+    dispatch(signOutRD());
+  }
+
   return (
-    <ModelMenuStyle>
+    <ModelMenuStyle token={token}>
       <div className={`sidebar ${toggleMenu ? "" : "close"} `}>
         <div className="logo-details">
           <img
@@ -279,21 +304,40 @@ const ModelMenu = ({
             data.map((item, index) => (
               <CollapseItem data={item} key={item.id} />
             ))}
+
           <li>
-            <div className="profile-details">
-              <div className="profile-content">
-                <img
-                  src={`${avatar !== "null" ? avatar : "/images/no-image.jpg"}`}
-                  alt="profile"
+            {token ? (
+              <div className="profile-details">
+                <div className="profile-content">
+                  <img
+                    src={`${
+                      avatar === null || avatar === "null"
+                        ? "/images/no-image.jpg"
+                        : avatar
+                    }`}
+                    alt="profile"
+                  />
+                </div>
+                <div className="name-job">
+                  <div className="profile_name">{name}</div>
+                  <div className="job">{email}</div>
+                </div>
+
+                <i
+                  className="bx bx-log-out"
+                  title="Đăng xuất"
+                  onClick={handleSignOut}
                 />
               </div>
-              <div className="name-job">
-                <div className="profile_name">{name}</div>
-                <div className="job">{email}</div>
+            ) : (
+              <div className="profile-details">
+                <div className="profile-content">
+                  <Button href={"/sign-in"} style={{ fontSize: "1rem" }}>
+                    Đăng nhập
+                  </Button>
+                </div>
               </div>
-
-              <i className="bx bx-log-out" />
-            </div>
+            )}
           </li>
         </ul>
       </div>

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const SIGNIN = "signIn";
+const SIGNOUT = "SignOut";
 const initialState = {
   accessToken: "",
   refreshToken: "",
@@ -11,8 +12,11 @@ const initialState = {
 };
 
 export const signInRD = (obj) => ({
-  type: "SIGNIN",
+  type: SIGNIN,
   data: obj,
+});
+export const signOutRD = () => ({
+  type: SIGNOUT,
 });
 
 function userReducer(state = initialState, action) {
@@ -26,9 +30,14 @@ function userReducer(state = initialState, action) {
         username: action.data.username,
         email: action.data.email,
         name: action.data.name,
-        avatar: action.data.avatar,
+        avatar: action.data.avatar === "null" ? "" : action.data.avatar,
       };
-
+    case SIGNOUT: {
+      localStorage.clear();
+      return {
+        initialState,
+      };
+    }
     default: {
       if (localStorage.getItem("accessToken")) {
         return {
