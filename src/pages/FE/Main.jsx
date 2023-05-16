@@ -71,26 +71,38 @@ const MainStyle = styled.div`
   }
   .content {
     width: 100%;
-    height: 100%;
-    padding: 1rem 2rem 1rem 1rem;
+    height: calc(100% - 60px - 1rem);
+    padding: 1rem 0rem 1rem 1rem;
     background: rgb(${(props) => props.theme.gray3} / 1);
+  }
+  .menu-content-left {
+    display: flex;
+    column-gap: 1rem;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
 const Main = () => {
   const navigate = useNavigate();
   const params = useLocation();
+  const [title, setTitle] = useState(document.title);
 
   const [toggleSearch, setToggleSearch] = useState(false);
   const [toggleMenu, setToggleMenu] = useState(false);
   const [toggleFullscreen, setToggleFullscreen] = useState(true);
   useEffect(() => {
-    if (!params.pathname === "/dashboard" || !params.pathname === "/") {
+    setTitle(() => document.title);
+  }, [document.title]);
+  useEffect(() => {
+    if (params.pathname === "/dashboard" || params.pathname === "/") {
+      return;
+    } else {
       if (!localStorage.getItem("accessToken")) {
-        return navigate("/signIn");
+        return navigate("/sign-in");
       }
     }
-  }, []);
+  }, [params.pathname]);
   window.onkeydown = function (e) {
     // ESCAPE key pressed
     if (e.keyCode === 27) {
@@ -124,12 +136,12 @@ const Main = () => {
         className={`main_content ${toggleMenu ? "main_content-active" : ""}`}
       >
         <div className="menu-content ">
-          <div>
+          <div className="menu-content-left">
             <i
               className="bx bx-menu menu-content-icon"
               onClick={() => setToggleMenu(!toggleMenu)}
             ></i>
-            <span> </span>
+            <span>{title}</span>
           </div>
           <div className="menu-content-right">
             <div className="menu-content-item dropdown-btn">

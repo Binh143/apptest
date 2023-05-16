@@ -3,6 +3,7 @@ import HomeBE from "pages/BE/HomeBE";
 import MainBE from "pages/BE/MainBE";
 import Home from "pages/FE/Home";
 import Main from "pages/FE/Main";
+import CreateTeacher from "pages/FE/teacher/CreateTeacher";
 import DashboardTeacherFE from "pages/FE/teacher/DashboardTeacherFE";
 import PageNotFound from "pages/PageNotFound";
 import { Route, Routes } from "react-router-dom";
@@ -20,8 +21,8 @@ function App() {
             element={<DashboardTeacherFE></DashboardTeacherFE>}
           ></Route>
           <Route
-            path="teacher"
-            element={<DashboardTeacherFE></DashboardTeacherFE>}
+            path="teacher/create"
+            element={<CreateTeacher></CreateTeacher>}
           ></Route>
         </Route>
         <Route path="/admin" element={<MainBE></MainBE>}>

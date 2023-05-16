@@ -31,9 +31,9 @@ const SignInPage = () => {
     mode: "onChange",
     resolver: yupResolver(schema),
   });
-  const param = useParams(-1);
+
   const [togglePassword, setTogglePassword] = useState(false);
-  const user = useSelector((state) => state.user);
+  // const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -50,8 +50,12 @@ const SignInPage = () => {
     if (!isValid) return;
     // await signInWithEmailAndPassword(auth, values.email, values.password);
     const result = await AuthResourceAPI.postSignIn(values);
+    console.log(
+      "🚀 ~ file: SignInPage.jsx:53 ~ handleSignIn ~ result:",
+      result
+    );
 
-    if (result?.status === 200) {
+    if (result) {
       localStorage.setItem("accessToken", result.data.accessToken);
       localStorage.setItem("refreshToken", result.data.refreshToken);
       localStorage.setItem("username", result.data.username);
@@ -59,7 +63,10 @@ const SignInPage = () => {
       localStorage.setItem("avatar", result.data.avatar);
       localStorage.setItem("name", result.data.name);
       dispatch(signInRD(result.data));
-      if (localStorage.getItem("accessToken")) navigate("/dashboard");
+      if (localStorage.getItem("accessToken")) {
+        toast.success("Đăng nhập thành công");
+        navigate("/dashboard");
+      }
     } else if (result?.status >= 400 || result?.status < 500) {
       toast.error(result?.data.message, {
         delay: 100,

@@ -2,12 +2,15 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const navigate = useNavigate();
   useEffect(() => {
-    if (!localStorage.getItem("accessToken")) {
-      return navigate("/signIn");
-    }
-  }, []);
+    document.title = "Home";
+  });
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   if (!localStorage.getItem("accessToken")) {
+  //     return navigate("/sign-in");
+  //   }
+  // }, []);
   return <div>home</div>;
 };
 

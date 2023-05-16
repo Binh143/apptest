@@ -11,4 +11,5 @@ export const theme = {
   gray2: "104 104 104",
   gray3: "228 233 247",
   redF: "228 30 63",
+  warning: "255 193 7",
 };
